@@ -4,15 +4,14 @@
  
  //for the typing animation//
 
-//  const sentences = [
-//     "Welcome to Feenicks1 Solutions Ltd",
-//     "We Are Your Trusted Investment Partners",
-//     "We Believe In A Long Term Financial Growth",
-//     "Long term goals to fuel your future ",
-//    " Your Future Starts with One Smart Move today"
+ const sentences = [
+    "Welcome to Feenicks1 Solutions Ltd",
+    "Explore Investment Options tailored for you",
+    "Take our quick risk quiz to get started", 
+   " Watch your portfolio grow ovver time."
    
 
-//   ];
+  ];
   let part = 0;
   let index = 0;
   let currentText = '';
@@ -30,7 +29,7 @@
     if (!isDeleting && index === fullText.length + 1) {
       // Pause after typing full sentence
       isDeleting = true;
-      setTimeout(type, 2000);
+      setTimeout(type, 3000);
       return;
     }
     if (isDeleting && index === 0) {
@@ -38,7 +37,7 @@
       isDeleting = false;
       part = (part + 1) % sentences.length;
     }
-    const speed = isDeleting ? 60 : 100;
+    const speed = isDeleting ? 50 : 120;
     setTimeout(type, speed);
   }
   // Start typing after page load
@@ -613,4 +612,105 @@ setTimeout(() => {
 // Optional: hide when user clicks it
 tooltip.addEventListener("click", () => {
   tooltip.classList.remove("show");
+});
+
+
+
+
+
+
+
+//================for cookies section==============//
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const banner = document.getElementById('cookie-banner');
+  const acceptBtn = document.getElementById('accept-cookies');
+  const declineBtn = document.getElementById('decline-cookies');
+  const customizeBtn = document.getElementById('customize-cookies');
+  const modal = document.getElementById('cookie-modal');
+  const closeModalBtn = document.getElementById('close-modal');
+  const savePrefBtn = document.getElementById('save-preferences');
+  const analyticsCb = document.getElementById('analytics-cb');
+  const marketingCb = document.getElementById('marketing-cb');
+  const functionalCb = document.getElementById('functional-cb');
+  const footerLink = document.getElementById('footer-cookie-link');
+  function enableScripts() {
+    const prefs = JSON.parse(localStorage.getItem('cookiesPrefs')) || {};
+    if (prefs.analytics) console.log("Analytics enabled");
+    if (prefs.marketing) console.log("Marketing scripts enabled");
+    // Functional scripts always run
+  }
+  // Show banner if no choice yet
+  if (!localStorage.getItem('cookiesAccepted')) {
+    setTimeout(() => banner.classList.add('show'), 500);
+  }
+  // Accept all
+  acceptBtn.addEventListener('click', () => {
+    localStorage.setItem('cookiesAccepted','true');
+    localStorage.setItem('cookiesPrefs', JSON.stringify({analytics:true, marketing:true, functional:true}));
+    banner.classList.remove('show');
+    enableScripts();
+  });
+  // Decline all
+  declineBtn.addEventListener('click', () => {
+    localStorage.setItem('cookiesAccepted','false');
+    localStorage.setItem('cookiesPrefs', JSON.stringify({analytics:false, marketing:false, functional:true}));
+    banner.classList.remove('show');
+  });
+  // Customize
+  function openModal() {
+    modal.style.display = 'flex';
+    const prefs = JSON.parse(localStorage.getItem('cookiesPrefs')) || {};
+    analyticsCb.checked = prefs.analytics || false;
+    marketingCb.checked = prefs.marketing || false;
+    functionalCb.checked = prefs.functional !== undefined ? prefs.functional : true;
+  }
+  customizeBtn.addEventListener('click', openModal);
+  footerLink.addEventListener('click', openModal);
+  // Close modal
+  closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+  // Save preferences
+  savePrefBtn.addEventListener('click', () => {
+    const prefs = {
+      analytics: analyticsCb.checked,
+      marketing: marketingCb.checked,
+      functional: functionalCb.checked
+    };
+    localStorage.setItem('cookiesAccepted','true');
+    localStorage.setItem('cookiesPrefs', JSON.stringify(prefs));
+    modal.style.display = 'none';
+    banner.classList.remove('show');
+    enableScripts();
+  });
+  enableScripts();
+});
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const saveBtn = document.getElementById('save-preferences');
+  const analyticsCb = document.getElementById('analytics-cb');
+  const marketingCb = document.getElementById('marketing-cb');
+  const functionalCb = document.getElementById('functional-cb');
+   const banner = document.getElementById('cookie-banner');
+  // Load previous preferences
+  const prefs = JSON.parse(localStorage.getItem('cookiesPrefs')) || {};
+  analyticsCb.checked = prefs.analytics ?? true;
+  marketingCb.checked = prefs.marketing ?? true;
+  functionalCb.checked = prefs.functional ?? true;
+  // Save preferences
+  saveBtn.addEventListener('click', () => {
+    const newPrefs = {
+      analytics: analyticsCb.checked,
+      marketing: marketingCb.checked,
+      functional: functionalCb.checked
+    };
+    localStorage.setItem('cookiesPrefs', JSON.stringify(newPrefs));
+    localStorage.setItem('cookiesAccepted', 'true');
+    alert('Preferences saved!');
+    document.getElementById('cookie-modal').style.display = 'none';
+     banner.classList.remove('show');
+     banner.style.display="none";
+  });
 });
